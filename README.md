@@ -1,4 +1,3 @@
-# STA-309-Exam
 
 # STA-309 Exam  
 ## **Oasis Lyrics & Sentiment Dashboard**
