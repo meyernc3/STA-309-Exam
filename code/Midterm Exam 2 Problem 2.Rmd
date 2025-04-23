@@ -1,0 +1,333 @@
+---
+title: "Midterm Exam 3 problem 2"
+author: "Nolan Meyer"
+date: "2025-04-23"
+output: html_document
+---
+
+```{r}
+library(spotifyr)
+library(dplyr)
+library(readr)
+Sys.setenv(SPOTIFY_CLIENT_ID = '77b9be1630b54632a44467792b5879f3')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = '0768d265597d4a6daa6c3ec8b1d4b0b6')
+access_token <- get_spotify_access_token()
+```
+
+```{r}
+search_spotify("Oasis Definitely Maybe", type = "album")
+```
+```{r}
+definitely_maybe_tracks <- get_album_tracks("3LzKUdUTdJb6P7xGN6SotC")
+head(definitely_maybe_tracks)
+```
+```{r}
+morning_glory_results <- search_spotify("Oasis Morning Glory", type = "album")
+```
+
+```{r}
+morning_glory_tracks <- get_album_tracks("2u30gztZTylY4RG7IvfXs8")
+morning_glory_tracks$name
+```
+```{r}
+dig_out_results <- search_spotify("Oasis Dig Out Your Soul", type = "album")
+```
+
+```{r}
+dig_out_your_soul_tracks <- get_album_tracks("0qzmQzJH4ZDYMHvfN1Px15")
+dig_out_your_soul_tracks$name
+
+```
+```{r}
+definitely_maybe_tracks$album <- "Definitely Maybe"
+morning_glory_tracks$album <- "Morning Glory"
+dig_out_your_soul_tracks$album <- "Dig Out Your Soul"
+
+all_oasis_tracks <- bind_rows(
+  definitely_maybe_tracks,
+  morning_glory_tracks,
+  dig_out_your_soul_tracks
+)
+glimpse(all_oasis_tracks)
+
+```
+```{r}
+get_popularity <- function(track_id) {
+  tryCatch({
+    get_track(track_id)$popularity
+  }, error = function(e) NA)
+}
+
+all_oasis_tracks$popularity <- sapply(all_oasis_tracks$id, get_popularity)
+
+all_oasis_tracks %>%
+  select(name, album, popularity) %>%
+  arrange(desc(popularity)) %>%
+  head(10)
+```
+```{r}
+write_csv(all_oasis_tracks, "oasis_tracks_with_popularity.csv")
+```
+
+```{r}
+setwd("~/Downloads/STA-309-Exam-main")
+```
+
+
+```{r}
+library(tidyverse)
+library(tidytext)
+
+album1_files <- list.files("lyrics/Album 1", full.names = TRUE)
+album1_lyrics <- map_chr(album1_files, read_file) %>% paste(collapse = " ")
+album1_words <- tibble(text = album1_lyrics) %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE)
+
+album2_files <- list.files("lyrics/Album 2", full.names = TRUE)
+album2_lyrics <- map_chr(album2_files, read_file) %>% paste(collapse = " ")
+
+album3_files <- list.files("lyrics/album_3", full.names = TRUE)
+album3_lyrics <- map_chr(album3_files, read_file) %>% paste(collapse = " ")
+
+```
+
+
+
+
+```{r}
+library(ggplot2)
+library(ggwordcloud)
+library(dplyr)
+album1_words %>%
+  filter(nchar(word) >= 3) %>%
+  slice_max(n, n = 100) %>%
+  ggplot(aes(label = word, size = n)) +
+  geom_text_wordcloud_area(
+    max_words = 100,
+    grid_size = 5,
+    eccentricity = 1,
+    color = "steelblue4"
+  ) +
+  scale_size_area(max_size = 18) +
+  labs(title = "Top Words in 'Definitely Maybe'") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+wordcloud1 <- last_plot()
+```
+```{r}
+library(ggplot2)
+library(ggwordcloud)
+album2_files <- list.files("lyrics/Album 2", full.names = TRUE)
+album2_lyrics <- paste(sapply(album2_files, readLines), collapse = " ")
+album2_words <- tibble(text = album2_lyrics) %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE)
+
+ggplot(album2_words %>% filter(nchar(word) >= 3) %>% slice_max(n, n = 100),
+       aes(label = word, size = n)) +
+  geom_text_wordcloud_area(
+    max_words = 100,
+    grid_size = 5,
+    eccentricity = 1,
+    color = "steelblue4"
+  ) +
+  scale_size_area(max_size = 18) +
+  labs(title = "Top Words in 'Morning Glory'") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+
+wordcloud2 <- last_plot()
+```
+
+```{r}
+library(ggplot2)
+library(ggwordcloud)
+album3_files <- list.files("lyrics/album_3", full.names = TRUE)
+album3_lyrics <- paste(sapply(album3_files, readLines), collapse = " ")
+album3_words <- tibble(text = album3_lyrics) %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE)
+
+ggplot(album3_words %>% filter(nchar(word) >= 3) %>% slice_max(n, n = 100),
+       aes(label = word, size = n)) +
+  geom_text_wordcloud_area(
+    max_words = 100,
+    grid_size = 5,
+    eccentricity = 1,
+    color = "steelblue4"
+  ) +
+  scale_size_area(max_size = 18) +
+  labs(title = "Top Words in 'Dig Out Your Soul'") +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+wordcloud3 <- last_plot()
+```
+```{r}
+library(tidytext)
+library(dplyr)
+library(ggplot2)
+album1_words <- album1_words %>% mutate(album = "Definitely Maybe")
+album2_words <- album2_words %>% mutate(album = "Morning Glory")
+album3_words <- album3_words %>% mutate(album = "Dig Out Your Soul")
+all_words <- bind_rows(album1_words, album2_words, album3_words)
+
+sentiment_counts <- all_words %>%
+  inner_join(get_sentiments("bing"), by = "word") %>%
+  count(album, sentiment)
+ggplot(sentiment_counts, aes(x = album, y = n, fill = sentiment)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = "Sentiment Comparison by Album",
+    x = "Album",
+    y = "Word Count"
+  ) +
+  scale_fill_manual(values = c("steelblue3", "indianred3")) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+sentiment_bar <- last_plot()
+```
+
+
+```{r}
+library(tidyverse)
+library(tidytext)
+bing <- get_sentiments("bing")
+
+get_song_sentiment <- function(path) {
+  lyrics <- paste(readLines(path, warn = FALSE), collapse = " ")
+  words  <- tibble(text = lyrics) %>%
+    unnest_tokens(word, text)
+
+  sentiment_counts <- words %>%
+    inner_join(bing, by = "word") %>%
+    summarize(
+      positive = sum(sentiment == "positive"),
+      negative = sum(sentiment == "negative")
+    )
+
+  sentiment_counts %>%
+    mutate(
+      song = tolower(tools::file_path_sans_ext(basename(path))),
+      net_sentiment = positive - negative
+    )
+}
+
+album1_sentiment <- list.files("lyrics/Album 1", full.names = TRUE) %>%
+  map_df(get_song_sentiment) %>%
+  mutate(album = "Definitely Maybe")
+
+album2_sentiment <- list.files("lyrics/Album 2", full.names = TRUE) %>%
+  map_df(get_song_sentiment) %>%
+  mutate(album = "Morning Glory")
+
+album3_sentiment <- list.files("lyrics/album_3", full.names = TRUE) %>%
+  map_df(get_song_sentiment) %>%
+  mutate(album = "Dig Out Your Soul")
+
+all_sentiment <- bind_rows(album1_sentiment, album2_sentiment, album3_sentiment)
+
+
+```
+
+
+
+
+
+```{r}
+all_sentiment_with_index <- all_sentiment %>%
+  group_by(album) %>%
+  mutate(row = row_number()) %>%
+  ungroup()
+popularity_with_index <- all_oasis_tracks %>%
+  mutate(album = case_when(
+    row_number() <= 11 ~ "Definitely Maybe",
+    row_number() <= 21 ~ "Morning Glory",
+    TRUE ~ "Dig Out Your Soul"
+  )) %>%
+  group_by(album) %>%
+  mutate(row = row_number()) %>%
+  ungroup() %>%
+  select(album, row, popularity)
+combined_sentiment_popularity <- left_join(all_sentiment_with_index, popularity_with_index,
+                                           by = c("album", "row"))
+
+ggplot(combined_sentiment_popularity, aes(x = net_sentiment, y = popularity, color = album)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+  labs(
+    title = "Sentiment vs. Popularity by Song",
+    x = "Net Sentiment Score",
+    y = "Spotify Popularity Score",
+    color = "Album"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(plot.title = element_text(hjust = 0.5, face = "bold"))
+sentiment_pop_plot <- last_plot()
+```
+```{r}
+library(dplyr)
+library(ggplot2)
+all_sentiment_with_row <- all_sentiment %>%
+  group_by(album) %>%
+  arrange(album, song) %>%
+  mutate(row = row_number()) %>%
+  ungroup()
+spotify_with_row <- all_oasis_tracks %>%
+  mutate(album = case_when(
+    row_number() <= 11 ~ "Definitely Maybe",
+    row_number() <= 21 ~ "Morning Glory",
+    TRUE ~ "Dig Out Your Soul"
+  )) %>%
+  group_by(album) %>%
+  mutate(row = row_number()) %>%
+  ungroup() %>%
+  select(album, row, duration_ms) %>%
+  mutate(duration_min = duration_ms / 60000)
+sentiment_duration <- left_join(all_sentiment_with_row, spotify_with_row, by = c("album", "row"))
+
+ggplot(sentiment_duration, aes(x = net_sentiment, y = duration_min, color = album)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE, linetype = "dashed") +
+  labs(
+    title = "Do Sentiment and Song Length Go Hand in Hand?",
+    subtitle = "Net sentiment vs. song duration across Oasis albums",
+    x = "Net Sentiment Score (Positive - Negative)",
+    y = "Song Duration (minutes)",
+    color = "Album"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold"),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+sentiment_duration_plot <- last_plot()
+
+
+```
+
+```{r}
+library(patchwork)
+
+final_dashboard <- (
+  (wordcloud1 | wordcloud2 | wordcloud3) /
+  (sentiment_bar | sentiment_pop_plot | sentiment_duration_plot)
+) +
+  plot_layout(heights = c(1, 1)) +
+  plot_annotation(
+    title = "Oasis Lyrics & Sentiment Dashboard",
+    caption = "Lyrics from Genius.com • Popularity & metadata from Spotify API"
+  ) &
+  theme(
+    plot.title = element_text(hjust = 0.5, face = "bold", size = 22),
+    plot.caption = element_text(hjust = 1, size = 10, face = "italic", margin = margin(t = 10)),
+    plot.margin = margin(10, 10, 10, 10)
+  )
+
+ggsave("dashboard/final_dashboard.png", final_dashboard, width = 22, height = 11, dpi = 300)
+
+```
+
