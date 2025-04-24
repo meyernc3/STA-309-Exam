@@ -4,7 +4,7 @@
 
 This project explores the lyrical content and commercial performance of three albums by the legendary British rock band **Oasis**. Using R-based data wrangling, text mining, and visualization techniques, the project analyzes how the emotional tone of lyrics aligns (or doesn't) with a song’s popularity and structure.
 
-It also contextualizes the lyrical evolution of Oasis across a 14-year span — from their explosive Britpop breakthrough to their more experimental later work.
+It also contextualizes the lyrical evolution of Oasis across a 14-year span, from their explosive breakthrough in their first two albums to their more experimental later work.
 
 ---
 
@@ -14,7 +14,7 @@ It also contextualizes the lyrical evolution of Oasis across a 14-year span — 
 Oasis's debut album, widely credited with reviving British guitar rock. It was raw, loud, and unapologetically emotional. It marked the band’s entry into mainstream success.
 
 ### **(What's the Story) Morning Glory? (1995)**  
-This follow-up cemented Oasis’s legacy. With anthems like *Wonderwall* and *Don’t Look Back in Anger*, it became one of the best-selling albums in UK history and propelled the band to global superstardom.
+This follow-up album cemented Oasis’s legacy. With their most famous songs like *Wonderwall* and *Don’t Look Back in Anger*, it became one of the best-selling albums in UK history and propelled the band to global superstardom.
 
 ### **Dig Out Your Soul (2008)**  
 Released much later in their career, this album features darker tones and more experimental production. While not as commercially dominant, it reflects the band’s shift in creative direction and maturity.
@@ -26,14 +26,14 @@ Released much later in their career, this album features darker tones and more e
 ### 1. **Word Clouds**  
 Each album's word cloud visualizes its most frequently used lyrics. Across all three albums, themes like **love**, **time**, **soul**, and **feeling** consistently appear, showing the emotional backbone of Oasis’s songwriting.
 
-Notably, *Definitely Maybe* is filled with confident, high-energy language, while *Dig Out Your Soul* leans more introspective and fragmented — suggesting a lyrical shift over time.
+Notably, *Definitely Maybe* is filled with confident, high-energy language, while *Dig Out Your Soul* leans more introspective and dark, suggesting a lyrical shift over time.
 
 ---
 
 ### 2. **Sentiment Breakdown**  
-A bar chart compares the total positive and negative sentiment word counts for each album. Interestingly, **all three albums skew negative**, particularly *Definitely Maybe*, which contains the highest number of sentiment-tagged words overall.
+The bar chart compares the total positive and negative sentiment word counts for each album. Interestingly, **all three albums skew negative**, particularly *Definitely Maybe*, which contains the highest number of sentiment-tagged words overall.
 
-This result challenges the common assumption that success in popular music is tied to lyrical positivity. Oasis’s style, especially in their early work, leans heavily into emotional realism and frustration — which clearly resonated with fans.
+This result challenges the common assumption that success in popular music is tied to lyrical positivity. Oasis’s style, especially in their early work, leans heavily into emotional realism and frustration which clearly resonated with fans due to the success of these albums.
 
 ---
 
@@ -47,7 +47,7 @@ This scatter plot shows each song’s net sentiment score against its Spotify po
 ### 4. **Sentiment vs. Duration**  
 This second scatter plot compares lyrical sentiment with song length. While no consistent relationship is found across all albums, *Dig Out Your Soul* stands out with **longer songs and more scattered sentiment values**, pointing to a more experimental and diverse emotional structure in their later work.
 
-This aligns with critiques of the album — more atmospheric and less anthemic than earlier releases.
+This aligns with critiques of the album which was that it was more atmospheric and less anthemic than earlier releases.
 
 ---
 
