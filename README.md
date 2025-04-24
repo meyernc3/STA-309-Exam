@@ -40,7 +40,7 @@ This result challenges the common assumption that success in popular music is ti
 ### 3. **Sentiment vs. Popularity**  
 This scatter plot shows each song’s net sentiment score against its Spotify popularity rating.
 
-**Key finding**: there is **no strong correlation** between positivity in lyrics and a song’s success. Some of the band’s most streamed songs — such as those from *Morning Glory* — have low or even negative sentiment values. This reinforces the idea that emotional impact matters more than sentiment “score” alone.
+**Key finding**: there is **no strong correlation** between positivity in lyrics and a song’s success. Some of the band’s most streamed songs, like the ones from *Morning Glory* have low or even negative sentiment values. This reinforces the idea that emotional impact matters more than sentiment “score” alone.
 
 ---
 
@@ -70,9 +70,9 @@ This aligns with critiques of the album which was that it was more atmospheric a
 
 ## **Summary of Insights**
 
-This project highlights that **Oasis’s success wasn’t based on feel-good lyrics or polished production** — it was built on **raw emotional energy, conviction, and cultural relevance**.
+This project highlights that **Oasis’s success wasn’t based on feel-good lyrics or polished production** , rather it was built on **raw emotional energy, conviction, and cultural relevance**.
 
-Their first two albums (*Definitely Maybe* and *Morning Glory*) are filled with honest, emotionally dense lyrics — often negative in tone — yet they achieved massive commercial and critical success. This suggests that fans connected deeply with the **vulnerability**, not necessarily the **optimism**.
+Their first two albums (*Definitely Maybe* and *Morning Glory*) are filled with honest, emotionally dense lyrics and often negative in tone, yet they achieved massive commercial and critical success. This suggests that fans connected deeply with the **vulnerability**, not necessarily the **optimism**.
 
-By contrast, their later work (*Dig Out Your Soul*) shows a stylistic shift: longer songs, more abstract language, and a wider emotional range. But these changes didn’t correspond to increased popularity — reinforcing the **unique cultural moment** captured by their debut era.
+By contrast, their later work (*Dig Out Your Soul*) shows a stylistic shift: longer songs, more abstract language, and a wider emotional range. But these changes didn’t correspond to increased popularity reinforcing the **unique cultural moment** captured by their debut era.
 
