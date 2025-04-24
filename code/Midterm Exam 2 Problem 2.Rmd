@@ -1,9 +1,11 @@
 ---
-title: "Midterm Exam 3 problem 2"
+title: "Midterm Exam 2 Problem 2"
 author: "Nolan Meyer"
 date: "2025-04-23"
 output: html_document
 ---
+
+
 
 ```{r}
 library(spotifyr)
@@ -77,20 +79,12 @@ setwd("~/Downloads/STA-309-Exam-main")
 ```{r}
 library(tidyverse)
 library(tidytext)
-
 album1_files <- list.files("lyrics/Album 1", full.names = TRUE)
 album1_lyrics <- map_chr(album1_files, read_file) %>% paste(collapse = " ")
-album1_words <- tibble(text = album1_lyrics) %>%
-  unnest_tokens(word, text) %>%
-  anti_join(stop_words, by = "word") %>%
-  count(word, sort = TRUE)
-
 album2_files <- list.files("lyrics/Album 2", full.names = TRUE)
 album2_lyrics <- map_chr(album2_files, read_file) %>% paste(collapse = " ")
-
 album3_files <- list.files("lyrics/album_3", full.names = TRUE)
 album3_lyrics <- map_chr(album3_files, read_file) %>% paste(collapse = " ")
-
 ```
 
 
@@ -100,6 +94,11 @@ album3_lyrics <- map_chr(album3_files, read_file) %>% paste(collapse = " ")
 library(ggplot2)
 library(ggwordcloud)
 library(dplyr)
+
+album1_words <- tibble(text = album1_lyrics) %>%
+  unnest_tokens(word, text) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE)
 album1_words %>%
   filter(nchar(word) >= 3) %>%
   slice_max(n, n = 100) %>%
@@ -201,39 +200,37 @@ get_song_sentiment <- function(path) {
   lyrics <- paste(readLines(path, warn = FALSE), collapse = " ")
   words  <- tibble(text = lyrics) %>%
     unnest_tokens(word, text)
-
-  sentiment_counts <- words %>%
+    sentiment_counts <- words %>%
     inner_join(bing, by = "word") %>%
     summarize(
       positive = sum(sentiment == "positive"),
       negative = sum(sentiment == "negative")
     )
-
-  sentiment_counts %>%
+    sentiment_counts %>%
     mutate(
-      song = tolower(tools::file_path_sans_ext(basename(path))),
+      song          = tools::file_path_sans_ext(basename(path)),
       net_sentiment = positive - negative
     )
-}
-
+} 
 album1_sentiment <- list.files("lyrics/Album 1", full.names = TRUE) %>%
   map_df(get_song_sentiment) %>%
   mutate(album = "Definitely Maybe")
-
 album2_sentiment <- list.files("lyrics/Album 2", full.names = TRUE) %>%
   map_df(get_song_sentiment) %>%
   mutate(album = "Morning Glory")
-
 album3_sentiment <- list.files("lyrics/album_3", full.names = TRUE) %>%
   map_df(get_song_sentiment) %>%
   mutate(album = "Dig Out Your Soul")
-
-all_sentiment <- bind_rows(album1_sentiment, album2_sentiment, album3_sentiment)
-
-
+all_sentiment <- bind_rows(album1_sentiment,
+                           album2_sentiment,
+                           album3_sentiment)
+all_sentiment
 ```
-
-
+```{r}
+combined_sentiment_popularity <- all_sentiment %>%
+  mutate(song = tolower(song)) %>%
+  inner_join(all_oasis_tracks %>% mutate(name = tolower(name)), by = c("song" = "name"))
+```
 
 
 
@@ -330,4 +327,3 @@ final_dashboard <- (
 ggsave("dashboard/final_dashboard.png", final_dashboard, width = 22, height = 11, dpi = 300)
 
 ```
-
